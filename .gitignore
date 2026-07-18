@@ -2,4 +2,5 @@
 *.o
 repress_guard_state_test
 repress_guard_listener_test
+repress_guard_positions_test
 .DS_Store

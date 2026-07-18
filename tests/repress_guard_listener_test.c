@@ -35,5 +35,12 @@ int main(void) {
 
     printf("keymap saw %u presses; expected 1\n", forwarded_presses);
     assert(forwarded_presses == 1U);
+
+    /* Position 13 is excluded by the test's Kconfig value. */
+    dispatch(0U, 13U, true, 300);
+    dispatch(0U, 13U, false, 350);
+    dispatch(0U, 13U, true, 400);
+    dispatch(0U, 13U, false, 450);
+    assert(forwarded_presses == 3U);
     return 0;
 }

@@ -81,7 +81,12 @@ Optional settings in the applicable `.conf` file:
 ```conf
 CONFIG_ZMK_REPRESS_GUARD=y
 CONFIG_ZMK_REPRESS_GUARD_WINDOW_MS=30
+CONFIG_ZMK_REPRESS_GUARD_EXCLUDED_POSITIONS="0 12 63"
 ```
+
+The exclusion list contains keymap position numbers separated by spaces or
+commas. Events from those positions bypass the guard completely. Leave it empty
+to filter every position.
 
 Set `CONFIG_ZMK_REPRESS_GUARD=n` to compile it out.
 

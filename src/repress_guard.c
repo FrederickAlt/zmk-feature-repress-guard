@@ -11,6 +11,7 @@
 #include <zmk/events/position_state_changed.h>
 #include <zmk/matrix.h>
 
+#include <zmk_feature_repress_guard/repress_guard_positions.h>
 #include <zmk_feature_repress_guard/repress_guard_state.h>
 
 #if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
@@ -30,7 +31,9 @@ static int repress_guard_listener(const zmk_event_t *eh) {
     const struct zmk_position_state_changed *event =
         as_zmk_position_state_changed(eh);
 
-    if (event == NULL || event->position >= ARRAY_SIZE(position_states)) {
+    if (event == NULL || event->position >= ARRAY_SIZE(position_states) ||
+        zmk_repress_guard_position_is_excluded(
+            event->position, CONFIG_ZMK_REPRESS_GUARD_EXCLUDED_POSITIONS)) {
         return ZMK_EV_EVENT_BUBBLE;
     }
 

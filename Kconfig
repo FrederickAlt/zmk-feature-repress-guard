@@ -20,6 +20,14 @@ config ZMK_REPRESS_GUARD_WINDOW_MS
       below this value is suppressed. A press exactly at the configured value
       is forwarded.
 
+config ZMK_REPRESS_GUARD_EXCLUDED_POSITIONS
+    string "Key positions excluded from re-press suppression"
+    default ""
+    help
+      Space- or comma-separated keymap position numbers that should bypass
+      the re-press guard, for example "0 12 63". Excluded events are forwarded
+      unchanged and do not update guard state.
+
 endif # ZMK_REPRESS_GUARD
 
 endmenu
