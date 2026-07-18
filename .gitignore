@@ -1,0 +1,4 @@
+/build/
+*.o
+repress_guard_state_test
+.DS_Store

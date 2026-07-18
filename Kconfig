@@ -1,0 +1,25 @@
+menu "Repress guard"
+
+config ZMK_REPRESS_GUARD
+    bool "Suppress rapid re-presses of the same key position"
+    default y
+    help
+      Forward normal position events immediately. After a paired physical
+      release, suppress a new press of that same position if it arrives inside
+      the configured window, and suppress the matching release as well.
+
+if ZMK_REPRESS_GUARD
+
+config ZMK_REPRESS_GUARD_WINDOW_MS
+    int "Re-press suppression window (ms)"
+    range 1 1000
+    default 30
+    help
+      Time measured from the latest paired physical release to the next
+      press of the same key position. A press with elapsed time strictly
+      below this value is suppressed. A press exactly at the configured value
+      is forwarded.
+
+endif # ZMK_REPRESS_GUARD
+
+endmenu

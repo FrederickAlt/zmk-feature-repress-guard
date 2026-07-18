@@ -1,0 +1,16 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  state-machine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build state-machine tests
+        run: cc -std=c11 -Wall -Wextra -Werror -pedantic -Iinclude src/repress_guard_state.c tests/repress_guard_state_test.c -o repress_guard_state_test
+      - name: Run state-machine tests
+        run: ./repress_guard_state_test

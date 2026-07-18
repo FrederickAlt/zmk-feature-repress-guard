@@ -1,0 +1,4 @@
+name: zmk-feature-repress-guard
+build:
+  cmake: .
+  kconfig: Kconfig
