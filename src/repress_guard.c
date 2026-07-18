@@ -13,14 +13,24 @@
 
 #include <zmk_feature_repress_guard/repress_guard_state.h>
 
+#if !IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 static struct zmk_repress_guard_state position_states[ZMK_KEYMAP_LEN];
+#endif
 
 static int repress_guard_listener(const zmk_event_t *eh) {
+#if IS_ENABLED(CONFIG_ZMK_SPLIT) && !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+    /*
+     * The central owns keymap processing. Filtering only there avoids relying
+     * on linker order relative to the peripheral transport listener, and
+     * avoids applying the guard twice to remote events.
+     */
+    (void)eh;
+    return ZMK_EV_EVENT_BUBBLE;
+#else
     const struct zmk_position_state_changed *event =
         as_zmk_position_state_changed(eh);
 
-    if (event == NULL || event->source != ZMK_POSITION_STATE_CHANGE_SOURCE_LOCAL ||
-        event->position >= ARRAY_SIZE(position_states)) {
+    if (event == NULL || event->position >= ARRAY_SIZE(position_states)) {
         return ZMK_EV_EVENT_BUBBLE;
     }
 
@@ -30,6 +40,7 @@ static int repress_guard_listener(const zmk_event_t *eh) {
 
     return action == ZMK_REPRESS_GUARD_FORWARD ? ZMK_EV_EVENT_BUBBLE
                                                : ZMK_EV_EVENT_HANDLED;
+#endif
 }
 
 ZMK_LISTENER(repress_guard, repress_guard_listener);

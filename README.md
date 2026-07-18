@@ -29,15 +29,16 @@ there is no timer, queue, replay, or deferred decision.
 
 ## Split keyboards
 
-Only events marked as local to the scanning device are filtered. Therefore:
+The device that owns keymap processing applies the guard. Therefore:
 
-- a peripheral filters its own switch events before they are sent to the
-  central;
-- the central does not filter those remote events a second time;
-- local keys on a central are still filtered.
+- a split central filters both its local events and events received from its
+  peripherals before the keymap handles them;
+- split peripherals forward their events without applying the guard, avoiding
+  duplicate filtering and listener-order dependencies;
+- a non-split keyboard filters its local events before keymap processing.
 
-Build and flash the module on every half that scans switches. A normal ZMK
-split build does this when the module is present in the shared `west.yml`.
+The module must be present in the central build. Keeping it in the shared
+`west.yml` is sufficient for a normal ZMK split build.
 
 ## Install from a separate GitHub repository
 
@@ -106,8 +107,8 @@ position 7:  press @ 151 ms   -> handled independently
   while the switch is still physically held, downstream behaviors will see an
   early key-up; the following re-press and final release will be suppressed.
   Preserving a continuous hold in that case would require delaying the release.
-- Events outside the physical keymap position range and remote events on a
-  split central are intentionally left untouched.
+- Events outside the physical keymap position range are intentionally left
+  untouched.
 
 ## Test
 
